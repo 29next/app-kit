@@ -11,9 +11,7 @@ ENV_FILE = os.path.abspath(ENV_FILE_NAME)
 CONFIG_FILE_NAME = './config.yml'
 CONFIG_FILE = os.path.abspath(CONFIG_FILE_NAME)
 
-
-# API_URL = 'https://accounts.29next.com'
-API_URL = 'http://localhost:1111'
+API_URL = 'https://accounts.29next.com'
 
 ZIP_FILE_FORMAT = "{app_name}-" + time.strftime("%Y%m%d%H%M%S")
 ZIP_DESTINATION_DIRECTORY = '.tmp'
