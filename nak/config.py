@@ -1,35 +1,10 @@
 import logging
 import os
-import time
 
 import yaml
 from decouple import config as env_config
 
-ENV_FILE_NAME = './.env'
-ENV_FILE = os.path.abspath(ENV_FILE_NAME)
-
-CONFIG_FILE_NAME = './config.yml'
-CONFIG_FILE = os.path.abspath(CONFIG_FILE_NAME)
-
-API_URL = 'https://accounts.29next.com'
-
-ZIP_FILE_FORMAT = "{app_name}-" + time.strftime("%Y%m%d%H%M%S")
-ZIP_DESTINATION_DIRECTORY = '.tmp'
-ZIP_DESTINATION_PATH = f'./{ZIP_DESTINATION_DIRECTORY}/{ZIP_FILE_FORMAT}.zip'
-ZIP_EXCLUDE_FILES = ['.env', 'config.yml', ZIP_DESTINATION_DIRECTORY]
-
-CONTENT_FILE_EXTENSIONS = ['.html', '.json', '.css', '.scss', '.js']
-MEDIA_FILE_EXTENSIONS = [
-    '.woff2', '.gif', '.ico', '.png', '.jpg', '.jpeg', '.svg', '.eot', '.tff', '.ttf', '.woff',
-    '.webp', '.mp4', '.webm', '.mp3', '.pdf',
-]
-ALLOW_FILE_EXTENSIONS = CONTENT_FILE_EXTENSIONS + MEDIA_FILE_EXTENSIONS
-
-
-class LOG_COLOR:
-    ERROR = '\x1b[31;10m{message}\x1b[0m'
-    SUCCESS = '\x1b[32;10m{message}\x1b[0m'
-    INFO = '\x1b[36;10m{message}\x1b[0m'
+from nak.settings import CONFIG_FILE, ENV_FILE, LOG_COLOR
 
 
 class Config(object):
@@ -80,7 +55,10 @@ class Config(object):
 
     def write_config(self):
         configs, env = self.read_config()
-        if not configs or configs.get('client_id') != self.client_id:
+        new_configs = {
+            'client_id': self.client_id
+        }
+        if not configs or configs != new_configs:
             with open(CONFIG_FILE, 'w') as yamlfile:
                 yaml.dump({
                     'client_id': self.client_id
@@ -89,7 +67,11 @@ class Config(object):
 
             logging.info(LOG_COLOR.INFO.format(message='Configuration was updated.'))
 
-        if not env or env.get('email') != self.email or env.get('password') != self.password:
+        new_env = {
+            'email': self.email,
+            'password': self.password
+        }
+        if not env or env != new_env:
             with open(ENV_FILE, 'w') as envfile:
                 environments = "\n".join([
                     f'email={self.email}',
