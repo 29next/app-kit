@@ -2,7 +2,7 @@ import os
 import time
 from pathlib import Path
 
-from nak.conf import ZIP_EXCLUDE_FILES
+from nak.conf import ALLOW_FILE_EXTENSIONS, ZIP_EXCLUDE_FILES
 
 
 def get_latest_zip(pathfile):
@@ -33,7 +33,7 @@ def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='â
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
         current_time = time.strftime('%Y-%m-%d %H:%M:%S')
-        print(f'\r{current_time} INFO {prefix} | \033[5;32m{bar}\033[5;0m| {percent}% {suffix}', end=printEnd)
+        print(f'\r{current_time} INFO {prefix} | \033[1;32m{bar}\033[1;0m| {percent}% {suffix}', end=printEnd)
 
     # Initial Call
     print_progress_bar(0)
@@ -45,20 +45,36 @@ def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='â
     print()
 
 
-def get_all_file(path):
+def get_all_file(path, required_extension=None):
     list_file = os.listdir(path)
     all_files = []
-    # Iterate over all the entries
     for entry in list_file:
-        if any([exclude_file in entry for exclude_file in ZIP_EXCLUDE_FILES]):
+        extension = os.path.splitext(entry)[1]
+        if any([exclude_file in entry for exclude_file in ZIP_EXCLUDE_FILES]) or \
+                (extension != required_extension and not (os.path.isdir(entry) or extension in ALLOW_FILE_EXTENSIONS)):
             continue
 
-        # Create full path
         fullPath = os.path.join(path, entry)
-
-        # If entry is a directory then get the list of files in this directory
         if os.path.isdir(fullPath):
             all_files = all_files + get_all_file(fullPath)
         else:
             all_files.append(fullPath)
     return all_files
+
+
+def hide_variable(value, all=False):
+    if not value:
+        return
+    return "********" if all else f"********{value[-8:]}"
+
+
+def get_error_from_response(response):
+    result = response.json()
+    error_msg = ""
+    for key, value in result.items():
+        if type(value) == list:
+            error_msg += f'"{key}" : {" ".join(value)}'
+        else:
+            error_msg += value
+
+    return error_msg
