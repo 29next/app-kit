@@ -1,6 +1,6 @@
 import requests
 
-from nak.conf import API_URL
+from nak.settings import API_URL
 
 
 class Gateway:

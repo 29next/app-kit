@@ -2,7 +2,7 @@ import os
 import time
 from pathlib import Path
 
-from nak.conf import ALLOW_FILE_EXTENSIONS, ZIP_EXCLUDE_FILES
+from nak.settings import ALLOW_FILE_EXTENSIONS, ZIP_EXCLUDE_FILES
 
 
 def get_latest_zip(pathfile):

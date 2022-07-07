@@ -1,11 +1,11 @@
 import logging
 import os
-import time
 import zipfile
 
-from nak.conf import (CONFIG_FILE, ENV_FILE, LOG_COLOR,
-                      ZIP_DESTINATION_DIRECTORY, ZIP_DESTINATION_PATH, Config)
+from nak.config import Config
 from nak.gateway import Gateway
+from nak.settings import (CONFIG_FILE, ENV_FILE, LOG_COLOR,
+                          ZIP_DESTINATION_DIRECTORY, ZIP_DESTINATION_PATH)
 from nak.utils import (get_all_file, get_error_from_response, hide_variable,
                        progress_bar)
 
@@ -60,7 +60,6 @@ class Command(object):
 
         new_zip = zipfile.ZipFile(destination_file, 'w')
         for file in progress_bar(file_list, prefix='Progress:', suffix='Complete', length=50):
-            time.sleep(0.05)
             new_zip.write(file)
 
         new_zip.close()

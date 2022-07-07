@@ -39,8 +39,6 @@ Usage:
             formatter_class=argparse.RawTextHelpFormatter
         )
         parser_setup.set_defaults(func=self.command.setup)
-        # self._add_config_arguments(parser_setup)
-
         # create the parser for the "build" command
         parser_build = subparsers.add_parser(
             'build',
@@ -53,8 +51,6 @@ Usage:
             formatter_class=argparse.RawTextHelpFormatter
         )
         parser_build.set_defaults(func=self.command.build)
-        # self._add_config_arguments(parser_build)
-
         # create the parser for the "push" command
         parser_push = subparsers.add_parser(
             'push',
@@ -67,6 +63,4 @@ Usage:
             formatter_class=argparse.RawTextHelpFormatter
         )
         parser_push.set_defaults(func=self.command.push)
-        # self._add_config_arguments(parser_push)
-
         return parser
