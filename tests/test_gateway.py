@@ -3,8 +3,8 @@ from unittest.mock import MagicMock, call, patch
 
 from requests.auth import HTTPBasicAuth
 
-from nak.conf import API_URL
 from nak.gateway import Gateway
+from nak.settings import API_URL
 
 
 class TestGateway(TestCase):

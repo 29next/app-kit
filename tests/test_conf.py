@@ -1,7 +1,8 @@
 from unittest import TestCase
 from unittest.mock import call, mock_open, patch
 
-from nak.conf import LOG_COLOR, Config
+from nak.config import Config
+from nak.settings import LOG_COLOR
 
 
 class TestConfig(TestCase):
@@ -16,7 +17,7 @@ class TestConfig(TestCase):
     ####
     @patch('builtins.open', mock_open(read_data='yaml data'))
     @patch("yaml.load", autospec=True)
-    @patch("nak.conf.env_config", autospec=True)
+    @patch("nak.config.env_config", autospec=True)
     @patch("os.path.exists", autospec=True)
     def test_read_config_should_read_config_from_file_and_return_config_correctly(
         self, mock_patch_exists, mock_env, mock_load_yaml
@@ -75,7 +76,7 @@ class TestConfig(TestCase):
     # # write_config
     # ####
     @patch("yaml.dump", autospec=True)
-    @patch("nak.conf.Config.read_config", autospec=True)
+    @patch("nak.config.Config.read_config", autospec=True)
     @patch("os.path.exists", autospec=True)
     def test_write_config_with_new_config_should_call_update_file_config_correctly(
         self, mock_patch_exists, mock_read_config, mock_dump_yaml
@@ -108,12 +109,12 @@ class TestConfig(TestCase):
     ####
     # save
     ####
-    @patch("nak.conf.Config.write_config", auto_space=True)
+    @patch("nak.config.Config.write_config", auto_space=True)
     def test_save_config_with_validate_true_true_should_call_write_config(self, mock_write_config):
         self.config.save()
         mock_write_config.assert_called_once_with()
 
-    @patch("nak.conf.Config.write_config", auto_space=True)
+    @patch("nak.config.Config.write_config", auto_space=True)
     def test_save_config_with_validate_false_false_should_call_write_config(self, mock_write_config):
         self.config.client_id = None
 

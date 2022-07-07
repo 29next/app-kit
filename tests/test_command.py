@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, call, mock_open, patch
 
 from nak.command import Command
-from nak.conf import LOG_COLOR
+from nak.settings import LOG_COLOR
 
 
 class TestCommand(unittest.TestCase):
