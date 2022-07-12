@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 tests_require = [
     "flake8==3.9.2",
@@ -12,7 +12,7 @@ with open('README.md', 'r') as fh:
 
 
 setup(
-    name='app-kit',
+    name='next-app-kit',
     author="29next",
     author_email="dev@29next.com",
     url='https://github.com/29next/app-kit',
