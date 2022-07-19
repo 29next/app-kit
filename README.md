@@ -31,7 +31,7 @@ Update to the latest version of App Kit with the following command:
 pip install next-app-kit --upgrade
 ```
 
-> :info: **Important**
+> :warning: **Important**
 >
 > Usage requires a Partner Account and an App Client ID, create and setup your partner account [here](https://accounts.29next.com/partners/).
 
@@ -47,7 +47,7 @@ With the package installed, you can now use the commands inside your app directo
 #### Setup
 Configures the current directory with necessary data to push the app files to 29 Next.
 
-**Data collected by the `setup` command:***
+**Data collected by the `setup` command:**
 * **App Client ID** - retrieve this from the app in your partner account.
 * **Email** - your email used to access your partner account.
 * **Password** - your password used to access your partner account.
