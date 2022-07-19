@@ -1,7 +1,7 @@
 <!-- Badges -->
 [![PyPI Version][pypi-v-image]][pypi-v-link]
 [![Build Status][GHAction-image]][GHAction-link]
-
+[![CodeCov][codecov-image]][codecov-link]
 
 # 29 Next App Kit
 
@@ -59,7 +59,8 @@ Creates a new version (zip of the current directory files) to prepare your app t
 Pushes the latest version to 29 Next and to your development stores to review and test your app.
 
 
-
+[codecov-image]: https://codecov.io/gh/29next/app-kit/branch/master/graph/badge.svg?token=1QLTNSH72Y
+[codecov-link]: https://codecov.io/gh/29next/app-kit
 
 [pypi-v-image]: https://img.shields.io/pypi/v/next-app-kit.svg
 [pypi-v-link]: https://pypi.org/project/next-app-kit/
