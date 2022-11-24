@@ -123,7 +123,7 @@ class TestCommand(unittest.TestCase):
     ):
         mock_get_file.return_value = ["test1.file", "test2.file"]
         mock_path_exists.side_effect = [
-            # check self dir at push command
+            # check envfile at read_config
             False,
             # check self dir at push command
             False,
@@ -211,3 +211,43 @@ class TestCommand(unittest.TestCase):
             f'INFO:root:{LOG_COLOR.INFO.format(message="by username test@29next.com")}',
             f"INFO:root:{LOG_COLOR.SUCCESS.format(message='Push update file to app successfully.')}"
         ]
+
+    @patch("os.path.exists", autospec=True)
+    @patch("nak.command.get_all_file", autospec=True)
+    @patch("nak.command.Config.write_config", autospec=True)
+    def test_push_with_no_directory_should_raise_error(
+        self, mock_write_config, mock_get_file, mock_path_exists
+    ):
+        mock_get_file.return_value = None
+        mock_path_exists.side_effect = [
+            # check envfile at read_config
+            True,
+            # check self dir at push command
+            False
+        ]
+
+        with self.assertRaises(TypeError) as error:
+            self.command.push()
+
+        assert str(error.exception) == LOG_COLOR.ERROR.format(
+            message=('No build file available. Run "nak build".'))
+
+    @patch("os.path.exists", autospec=True)
+    @patch("nak.command.get_all_file", autospec=True)
+    @patch("nak.command.Config.write_config", autospec=True)
+    def test_push_with_no_files_in_directory_should_raise_error(
+        self, mock_write_config, mock_get_file, mock_path_exists
+    ):
+        mock_get_file.return_value = None
+        mock_path_exists.side_effect = [
+            # check envfile at read_config
+            True,
+            # check self dir at push command
+            True
+        ]
+
+        with self.assertRaises(TypeError) as error:
+            self.command.push()
+
+        assert str(error.exception) == LOG_COLOR.ERROR.format(
+            message=('Please run build before push command.'))

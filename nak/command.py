@@ -74,7 +74,7 @@ class Command(object):
 
         if not os.path.exists(ZIP_DESTINATION_DIRECTORY):
             raise TypeError(LOG_COLOR.ERROR.format(
-                message=('No build file available. Run "nak build"')))
+                message=('No build file available. Run "nak build".')))
 
         zip_file_list = get_all_file(path=f"./{ZIP_DESTINATION_DIRECTORY}", required_extension='.zip')
         if not zip_file_list:
