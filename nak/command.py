@@ -29,9 +29,9 @@ class Command(object):
         self.config.client_id = input(
             f"App Client ID [{hide_variable(self.config.client_id)}]: ") or self.config.client_id
         self.config.email = input(
-            f"App Email [{self.config.email}]: ") or self.config.email
+            f"accounts.29next.com Email [{self.config.email}]: ") or self.config.email
         self.config.password = input(
-            f"App Password [{hide_variable(self.config.password, True)}]: ") or self.config.password
+            f"accounts.29next.com Password [{hide_variable(self.config.password, True)}]: ") or self.config.password
         self.config.save()
 
         logging.info(LOG_COLOR.SUCCESS.format(
@@ -66,14 +66,17 @@ class Command(object):
         logging.info(LOG_COLOR.SUCCESS.format(message='Build successfully.'))
 
     def push(self, parser=None):
-        if not os.path.exists(ZIP_DESTINATION_DIRECTORY):
+        if not (os.path.exists(ENV_FILE) or os.path.exists(CONFIG_FILE)):
             raise TypeError(LOG_COLOR.ERROR.format(
                 message=(
                     'Unable to locate config or env file. '
                     'You can configure config or env file by running "nak setup".')))
 
-        zip_file_list = get_all_file(path=f"./{ZIP_DESTINATION_DIRECTORY}", required_extension='.zip')
+        if not os.path.exists(ZIP_DESTINATION_DIRECTORY):
+            raise TypeError(LOG_COLOR.ERROR.format(
+                message=('No build file available. Run "nak build"')))
 
+        zip_file_list = get_all_file(path=f"./{ZIP_DESTINATION_DIRECTORY}", required_extension='.zip')
         if not zip_file_list:
             raise TypeError(LOG_COLOR.ERROR.format(message='Please run build before push command.'))
 
