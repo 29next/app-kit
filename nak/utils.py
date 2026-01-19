@@ -2,11 +2,23 @@ import os
 import time
 from pathlib import Path
 
-from nak.settings import ALLOW_FILE_EXTENSIONS, ZIP_EXCLUDE_FILES
+from nak.settings import ALLOW_FILE_EXTENSIONS, ZIP_DESTINATION_DIRECTORY, ZIP_EXCLUDE_FILES
 
 
-def get_latest_zip(pathfile):
-    return Path(os.path.relpath(pathfile)).as_posix()
+def get_lastest_build_file():
+    path = Path(f"./{ZIP_DESTINATION_DIRECTORY}")
+
+    zip_files = [f for f in path.iterdir() if f.is_file() and f.suffix == ".zip"]
+    if not zip_files:
+        return None
+
+    zip_files_sorted = sorted(
+        zip_files,
+        key=lambda f: f.stat().st_ctime,
+        reverse=True
+    )
+
+    return zip_files_sorted[0].as_posix()
 
 
 def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
