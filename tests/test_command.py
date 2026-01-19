@@ -116,12 +116,10 @@ class TestCommand(unittest.TestCase):
     # push
     #####
     @patch("os.path.exists", autospec=True)
-    @patch("nak.command.get_all_file", autospec=True)
     @patch("nak.command.Config.write_config", autospec=True)
     def test_push_with_wrong_directory_should_raise_error_correctly(
-        self, mock_write_config, mock_get_file, mock_path_exists
+        self, mock_write_config, mock_path_exists
     ):
-        mock_get_file.return_value = ["test1.file", "test2.file"]
         mock_path_exists.side_effect = [
             # check envfile at read_config
             False,
@@ -139,12 +137,13 @@ class TestCommand(unittest.TestCase):
 
     @patch("builtins.open", autospec=True)
     @patch("os.path.exists", autospec=True)
-    @patch("nak.command.get_all_file", autospec=True)
+    @patch("nak.command.get_lastest_build_file", autospec=True)
     @patch("nak.command.Config.write_config", autospec=True)
     def test_push_with_failed_on_server_should_log_error_correctly(
         self, mock_write_config, mock_get_file, mock_path_exists, mock_open_file
     ):
-        mock_get_file.return_value = ["test1-20200101010101.zip", "test2-20200101010102.zip"]
+        mock_get_file.return_value = "test1-20200101010101.zip"
+
         mock_path_exists.side_effect = [
             # check envfile at read_config
             True,
@@ -165,24 +164,24 @@ class TestCommand(unittest.TestCase):
         self.mock_gateway.return_value.update_app.assert_called_once_with(
             files={
                 # send with latest file
-                'file': ('test2-20200101010102.zip', file)
+                'file': ('test1-20200101010101.zip', file)
             }
         )
         assert log.output == [
             f'INFO:root:{LOG_COLOR.INFO.format(message="Pushing to app with client_id 123456")}',
-            f'INFO:root:{LOG_COLOR.INFO.format(message="with filename test2-20200101010102.zip")}',
+            f'INFO:root:{LOG_COLOR.INFO.format(message="with filename test1-20200101010101.zip")}',
             f'INFO:root:{LOG_COLOR.INFO.format(message="by username test@29next.com")}',
             f"INFO:root:{LOG_COLOR.ERROR.format(message='Upload file to server failed. file size limit')}"
         ]
 
     @patch("builtins.open", autospec=True)
     @patch("os.path.exists", autospec=True)
-    @patch("nak.command.get_all_file", autospec=True)
+    @patch("nak.command.get_lastest_build_file", autospec=True)
     @patch("nak.command.Config.write_config", autospec=True)
     def test_push_with_correct_directory_should_call_gateway_correctly(
         self, mock_write_config, mock_get_file, mock_path_exists, mock_open_file
     ):
-        mock_get_file.return_value = ["test1-20200101010101.zip", "test2-20200101010102.zip"]
+        mock_get_file.return_value = "test2-20200101010102.zip"
         mock_path_exists.side_effect = [
             # check envfile at read_config
             True,
@@ -233,7 +232,7 @@ class TestCommand(unittest.TestCase):
             message=('No build file available. Run "nak build".'))
 
     @patch("os.path.exists", autospec=True)
-    @patch("nak.command.get_all_file", autospec=True)
+    @patch("nak.command.get_lastest_build_file", autospec=True)
     @patch("nak.command.Config.write_config", autospec=True)
     def test_push_with_no_files_in_directory_should_raise_error(
         self, mock_write_config, mock_get_file, mock_path_exists
