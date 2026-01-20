@@ -63,6 +63,7 @@ class Command(object):
             new_zip.write(file)
 
         new_zip.close()
+        logging.info(LOG_COLOR.INFO.format(message=f'Created build file with {destination_file.split("/")[-1]}.'))
         logging.info(LOG_COLOR.SUCCESS.format(message='Build successfully.'))
 
     def push(self, parser=None):

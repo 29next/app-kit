@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, call, mock_open, patch
 
 from nak.command import Command
-from nak.settings import LOG_COLOR
+from nak.settings import LOG_COLOR, ZIP_DESTINATION_PATH
 
 
 class TestCommand(unittest.TestCase):
@@ -106,9 +106,12 @@ class TestCommand(unittest.TestCase):
             call.write('test2.file'),
             call.close(),
         ]
+
+        file_name = ZIP_DESTINATION_PATH.format(app_name="app-kit").split('/')[-1]
         assert log.output == [
             f"INFO:root:{LOG_COLOR.INFO.format(message='file: test1.file')}",
             f"INFO:root:{LOG_COLOR.INFO.format(message='file: test2.file')}",
+            f"INFO:root:{LOG_COLOR.INFO.format(message=f'Created build file with {file_name}.')}",
             f"INFO:root:{LOG_COLOR.SUCCESS.format(message='Build successfully.')}"
         ]
 
