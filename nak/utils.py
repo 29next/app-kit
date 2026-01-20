@@ -12,13 +12,8 @@ def get_lastest_build_file():
     if not zip_files:
         return None
 
-    zip_files_sorted = sorted(
-        zip_files,
-        key=lambda f: f.stat().st_ctime,
-        reverse=True
-    )
-
-    return zip_files_sorted[0].as_posix()
+    latest_zip = max(zip_files, key=lambda f: f.stat().st_ctime)
+    return latest_zip.as_posix()
 
 
 def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
