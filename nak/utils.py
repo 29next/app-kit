@@ -2,11 +2,18 @@ import os
 import time
 from pathlib import Path
 
-from nak.settings import ALLOW_FILE_EXTENSIONS, ZIP_EXCLUDE_FILES
+from nak.settings import ALLOW_FILE_EXTENSIONS, ZIP_DESTINATION_DIRECTORY, ZIP_EXCLUDE_FILES
 
 
-def get_latest_zip(pathfile):
-    return Path(os.path.relpath(pathfile)).as_posix()
+def get_lastest_build_file():
+    path = Path(f"./{ZIP_DESTINATION_DIRECTORY}")
+
+    zip_files = [f for f in path.iterdir() if f.is_file() and f.suffix == ".zip"]
+    if not zip_files:
+        return None
+
+    latest_zip = max(zip_files, key=lambda f: f.stat().st_ctime)
+    return latest_zip.as_posix()
 
 
 def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
@@ -72,7 +79,7 @@ def get_error_from_response(response):
     result = response.json()
     error_msg = ""
     for key, value in result.items():
-        if type(value) == list:
+        if isinstance(value, list):
             error_msg += f'"{key}" : {" ".join(value)}'
         else:
             error_msg += value

@@ -6,7 +6,7 @@ from nak.config import Config
 from nak.gateway import Gateway
 from nak.settings import (CONFIG_FILE, ENV_FILE, LOG_COLOR,
                           ZIP_DESTINATION_DIRECTORY, ZIP_DESTINATION_PATH)
-from nak.utils import (get_all_file, get_error_from_response, hide_variable,
+from nak.utils import (get_all_file, get_error_from_response, hide_variable, get_lastest_build_file,
                        progress_bar)
 
 logging.basicConfig(
@@ -63,6 +63,7 @@ class Command(object):
             new_zip.write(file)
 
         new_zip.close()
+        logging.info(LOG_COLOR.INFO.format(message=f'Created build file with {destination_file.split("/")[-1]}.'))
         logging.info(LOG_COLOR.SUCCESS.format(message='Build successfully.'))
 
     def push(self, parser=None):
@@ -76,11 +77,10 @@ class Command(object):
             raise TypeError(LOG_COLOR.ERROR.format(
                 message=('No build file available. Run "nak build".')))
 
-        zip_file_list = get_all_file(path=f"./{ZIP_DESTINATION_DIRECTORY}", required_extension='.zip')
-        if not zip_file_list:
+        latest_build_file = get_lastest_build_file()
+        if not latest_build_file:
             raise TypeError(LOG_COLOR.ERROR.format(message='Please run build before push command.'))
 
-        latest_build_file = sorted(zip_file_list, key=lambda file_name: file_name, reverse=True)[0]
         file_name = latest_build_file.split("/")[-1]
 
         logging.info(LOG_COLOR.INFO.format(message=f'Pushing to app with client_id {self.config.client_id}'))

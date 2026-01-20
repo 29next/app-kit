@@ -67,3 +67,41 @@ class TestUtils(TestCase):
 
         actual = utils.get_all_file('.', required_extension='.zip')
         assert actual == ['./test_zip1.zip', './test_zip2.zip']
+
+    ####
+    # get_lastest_build_file
+    ###
+    @patch("nak.utils.Path")
+    def test_get_lastest_build_file_with_no_zip_file_should_return_none(self, mock_path):
+        mock_dir = MagicMock()
+        mock_path.return_value = mock_dir
+
+        mock_dir.iterdir.return_value = [
+            MagicMock(
+                is_file=MagicMock(return_value=True), suffix='.txt', as_posix=MagicMock(return_value='file1.txt')),
+            MagicMock(
+                is_file=MagicMock(return_value=True), suffix='.txt', as_posix=MagicMock(return_value='file2.txt'))
+        ]
+
+        result = utils.get_lastest_build_file()
+        assert result is None
+
+    @patch("nak.utils.Path")
+    def test_get_lastest_build_file_with_have_zip_fiile_should_return_latest_file(self, mock_path):
+        mock_dir = MagicMock()
+        mock_path.return_value = mock_dir
+
+        mock_file1 = MagicMock(
+            is_file=MagicMock(return_value=True), suffix='.zip', as_posix=MagicMock(return_value='file1.txt'))
+        mock_file1.stat.return_value.st_ctime = 1000
+        mock_file1.as_posix.return_value = 'file1.zip'
+
+        mock_file2 = MagicMock(
+            is_file=MagicMock(return_value=True), suffix='.zip', as_posix=MagicMock(return_value='file2.txt'))
+        mock_file2.stat.return_value.st_ctime = 2000
+        mock_file2.as_posix.return_value = 'file2.zip'
+
+        mock_dir.iterdir.return_value = [mock_file1, mock_file2]
+
+        result = utils.get_lastest_build_file()
+        assert result == 'file2.zip'

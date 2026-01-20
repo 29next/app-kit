@@ -1,10 +1,10 @@
 from setuptools import find_packages, setup
 
-__version__ = '1.0.3'
+__version__ = '1.0.4'
 
 tests_require = [
     "flake8==3.9.2",
-    "nose==1.3.7"
+    "pytest==7.2.2"
 ]
 
 with open('README.md', 'r') as fh:
